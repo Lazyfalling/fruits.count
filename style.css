@@ -1,0 +1,456 @@
+/* CSS重置和基础样式 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Microsoft YaHei', Arial, sans-serif;
+    background-color: #f9f7e8;
+    color: #333;
+    line-height: 1.6;
+    padding: 20px;
+}
+
+/* 游戏容器 */
+.game-container {
+    max-width: 900px;
+    margin: 0 auto;
+    background-color: #e3d8ac;
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+/* 标题样式 */
+.game-title {
+    text-align: center;
+    font-size: 2.5rem;
+    color: #ff6b6b;
+    margin-bottom: 15px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+    animation: titleBounce 2s ease-in-out infinite;
+}
+
+@keyframes titleBounce {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+/* 游戏说明 */
+.game-description {
+    text-align: center;
+    font-size: 1.2rem;
+    color: #666;
+    margin-bottom: 30px;
+}
+
+/* 画布容器 */
+.canvas-container {
+    width: 100%;
+    height: 400px;
+    margin-bottom: 30px;
+    border: 3px solid #ffd166;
+    border-radius: 15px;
+    overflow: hidden;
+    background-color: #fffaf0;
+    position: relative;
+    box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.05);
+}
+
+#gameCanvas {
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+}
+
+/* 水果选择和控制按钮 */
+.fruit-selection-controls {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+}
+
+.fruit-btn, .control-btn {
+    padding: 15px 30px;
+    font-size: 1.1rem;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: bold;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.fruit-btn:hover, .control-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+.fruit-btn:active, .control-btn:active {
+    transform: translateY(0);
+}
+
+.fruit-btn.active {
+    transform: scale(0.95);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* 水果按钮颜色 */
+.fruit-btn.apple {
+    background-color: #ff6b6b;
+    color: white;
+}
+
+.fruit-btn.orange {
+    background-color: #ff9a3c;
+    color: white;
+}
+
+.fruit-btn.peach {
+    background-color: #ff6b9d;
+    color: white;
+}
+
+/* 控制按钮颜色 */
+.control-btn.arrange {
+    background-color: #4ecdc4;
+    color: white;
+}
+
+.control-btn.reset {
+    background-color: #ff8c42;
+    color: white;
+    width: 100%;
+}
+
+.control-btn.submit {
+    background-color: #6a5acd;
+    color: white;
+    width: 100%;
+    margin-top: 10px;
+}
+
+/* 答题区域和控制按钮 */
+.answer-section-with-controls {
+    display: flex;
+    gap: 30px;
+    align-items: flex-start;
+}
+
+.left-controls {
+    display: flex;
+    flex-direction: column;
+    width: 200px;
+}
+
+.questions-container {
+    flex: 1;
+}
+
+/* 问题样式 */
+.question {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    padding: 15px;
+    background-color: #fff9eb;
+    border-radius: 15px;
+    border: 2px solid #ffd166;
+    transition: all 0.3s ease;
+}
+
+.question:hover {
+    background-color: #fff5e0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.question label {
+    font-size: 1.2rem;
+    color: #555;
+    margin-right: 15px;
+    font-weight: bold;
+}
+
+.answer-input {
+    flex: 1;
+    padding: 12px 20px;
+    font-size: 1.2rem;
+    border: 2px solid #ddd;
+    border-radius: 30px;
+    text-align: center;
+    background-color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.answer-input:hover {
+    border-color: #ffd166;
+    transform: scale(1.02);
+}
+
+.answer-input:focus {
+    outline: none;
+    border-color: #ffd166;
+    box-shadow: 0 0 0 3px rgba(255, 209, 102, 0.2);
+}
+
+.answer-input.error {
+    border-color: #ff6b6b;
+    background-color: #ffe6e6;
+}
+
+/* 数字键盘 */
+.number-pad {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+    min-width: 300px;
+}
+
+.number-display {
+    font-size: 2rem;
+    text-align: center;
+    margin-bottom: 20px;
+    padding: 15px;
+    background-color: #f0f0f0;
+    border-radius: 10px;
+    font-weight: bold;
+}
+
+.number-buttons {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.num-btn {
+    padding: 20px;
+    font-size: 1.5rem;
+    border: none;
+    border-radius: 10px;
+    background-color: #f8f9fa;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-weight: bold;
+}
+
+.num-btn:hover {
+    background-color: #e9ecef;
+    transform: scale(0.95);
+}
+
+.num-btn:active {
+    transform: scale(0.9);
+}
+
+.action-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.action-btn {
+    flex: 1;
+    padding: 15px;
+    font-size: 1.2rem;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-weight: bold;
+}
+
+.action-btn.delete {
+    background-color: #ff6b6b;
+    color: white;
+}
+
+.action-btn.confirm {
+    background-color: #4ecdc4;
+    color: white;
+}
+
+.action-btn:hover {
+    transform: scale(0.95);
+}
+
+/* 模态框 */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background-color: white;
+    padding: 40px;
+    border-radius: 20px;
+    text-align: center;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    max-width: 500px;
+    width: 90%;
+    animation: modalAppear 0.3s ease-out;
+}
+
+@keyframes modalAppear {
+    from {
+        opacity: 0;
+        transform: scale(0.8) translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+.result-title {
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+    color: #ff6b6b;
+}
+
+.result-message {
+    font-size: 1.2rem;
+    color: #555;
+    margin-bottom: 30px;
+}
+
+/* 再来一次按钮 */
+.play-again-btn {
+    padding: 15px 40px;
+    font-size: 1.2rem;
+    background-color: #4ecdc4;
+    color: white;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: bold;
+    display: block;
+    margin: 0 auto;
+}
+
+.play-again-btn:hover {
+    background-color: #45b7aa;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+/* 烟花特效容器 */
+.fireworks-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 999;
+}
+
+/* 隐藏类 */
+.hidden {
+    display: none !important;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .game-container {
+        padding: 20px;
+    }
+    
+    .game-title {
+        font-size: 2rem;
+    }
+    
+    .canvas-container {
+        height: 300px;
+    }
+    
+    .fruit-selection-controls {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .fruit-btn, .control-btn {
+        width: 100%;
+        max-width: 300px;
+    }
+    
+    .answer-section-with-controls {
+        flex-direction: column;
+        gap: 20px;
+    }
+    
+    .left-controls {
+        width: 100%;
+        flex-direction: row;
+        justify-content: space-between;
+    }
+    
+    .control-btn.reset, .control-btn.submit {
+        width: 48%;
+        margin-top: 0;
+    }
+    
+    .question {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .question label {
+        margin-bottom: 10px;
+    }
+    
+    .answer-input {
+        width: 100%;
+    }
+    
+    .number-pad {
+        width: 90%;
+        padding: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    body {
+        padding: 10px;
+    }
+    
+    .game-title {
+        font-size: 1.8rem;
+    }
+    
+    .canvas-container {
+        height: 250px;
+    }
+    
+    .left-controls {
+        flex-direction: column;
+    }
+    
+    .control-btn.reset, .control-btn.submit {
+        width: 100%;
+        margin-top: 10px;
+    }
+}

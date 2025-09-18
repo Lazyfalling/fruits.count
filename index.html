@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>水果数数练习</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="game-container">
+        <h1 class="game-title">🍎 水果数数练习 🍊</h1>
+        <p class="game-description">小朋友，请数一数有多少个水果吧！</p>
+        
+        <!-- 游戏画布 -->
+        <div class="canvas-container">
+            <canvas id="gameCanvas"></canvas>
+        </div>
+        
+        <!-- 水果选择按钮 -->
+        <div class="fruit-selection-controls">
+            <button id="appleBtn" class="fruit-btn apple">苹果</button>
+            <button id="orangeBtn" class="fruit-btn orange">橘子</button>
+            <button id="peachBtn" class="fruit-btn peach">桃子</button>
+            <button id="arrangeBtn" class="control-btn arrange">水果排列</button>
+        </div>
+        
+        <!-- 答题区域和控制按钮 -->
+        <div class="answer-section-with-controls">
+            <div class="left-controls">
+                <button id="resetBtn" class="control-btn reset">重新开始</button>
+                <button id="submitBtn" class="control-btn submit">提交</button>
+            </div>
+            
+            <div class="questions-container">
+                <!-- 问题 -->
+                <div class="question">
+                    <label for="appleAnswer">🍎 的数量：</label>
+                    <input type="text" id="appleAnswer" class="answer-input" readonly>
+                </div>
+                <div class="question">
+                    <label for="orangeAnswer">🍊 的数量：</label>
+                    <input type="text" id="orangeAnswer" class="answer-input" readonly>
+                </div>
+                <div class="question">
+                    <label for="peachAnswer">🍑 的数量：</label>
+                    <input type="text" id="peachAnswer" class="answer-input" readonly>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 数字键盘模态框 -->
+        <div id="numberPad" class="number-pad hidden">
+            <div id="currentNumber" class="number-display">0</div>
+            <div class="number-buttons">
+                <button class="num-btn" data-num="1">1</button>
+                <button class="num-btn" data-num="2">2</button>
+                <button class="num-btn" data-num="3">3</button>
+                <button class="num-btn" data-num="4">4</button>
+                <button class="num-btn" data-num="5">5</button>
+                <button class="num-btn" data-num="6">6</button>
+                <button class="num-btn" data-num="7">7</button>
+                <button class="num-btn" data-num="8">8</button>
+                <button class="num-btn" data-num="9">9</button>
+                <button class="num-btn" data-num="0">0</button>
+            </div>
+            <div class="action-buttons">
+                <button id="deleteBtn" class="action-btn delete">删除</button>
+                <button id="confirmBtn" class="action-btn confirm">确认</button>
+            </div>
+        </div>
+        
+        <!-- 结果模态框 -->
+        <div id="resultModal" class="modal hidden">
+            <div class="modal-content">
+                <h2 id="resultTitle" class="result-title"></h2>
+                <p id="resultMessage" class="result-message"></p>
+                <button id="playAgainBtn" class="play-again-btn">再来一次</button>
+            </div>
+        </div>
+        
+        <!-- 烟花特效容器 -->
+        <div id="fireworks-container" class="fireworks-container"></div>
+    </div>
+
+    <!-- 脚本文件 -->
+    <script src="click-sound.js"></script>
+    <script src="fireworks.js"></script>
+    <script src="game.js"></script>
+</body>
+</html>
