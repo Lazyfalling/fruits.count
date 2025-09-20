@@ -5,17 +5,17 @@ class FruitCountingGame {
         this.canvas = document.getElementById('gameCanvas');
         this.ctx = this.canvas.getContext('2d');
         this.appleBtn = document.getElementById('appleBtn');
-        this.orangeBtn = document.getElementById('orangeBtn');
-        this.peachBtn = document.getElementById('peachBtn');
+        this.lemonBtn = document.getElementById('lemonBtn');
+        this.kiwiBtn = document.getElementById('kiwiBtn');
         this.arrangeBtn = document.getElementById('arrangeBtn');
         this.resetBtn = document.getElementById('resetBtn');
         this.submitBtn = document.getElementById('submitBtn');
         this.counterElement = document.getElementById('selectedCount');
         
         // 答题输入框
-        this.appleAnswer = document.getElementById('appleAnswer');
-        this.orangeAnswer = document.getElementById('orangeAnswer');
-        this.peachAnswer = document.getElementById('peachAnswer');
+         this.appleAnswer = document.getElementById('appleAnswer');
+         this.lemonAnswer = document.getElementById('lemonAnswer');
+         this.kiwiAnswer = document.getElementById('kiwiAnswer');
         
         // 数字键盘
         this.numberPad = document.getElementById('numberPad');
@@ -33,32 +33,31 @@ class FruitCountingGame {
         this.currentSelection = null;
         this.selectedCount = 0;
         this.fruits = [];
-        this.fruitCounts = { apple: 0, orange: 0, peach: 0 };
-        this.selectedFruits = { apple: 0, orange: 0, peach: 0 };
+        this.fruitCounts = { apple: 0, lemon: 0, watermelon: 0 };
+        this.selectedFruits = { apple: 0, lemon: 0, kiwi: 0 };
         this.currentInput = null;
         this.currentNumber = '0';
         
         // 水果图标
         this.fruitIcons = {
             apple: '🍎',
-            orange: '🍊', 
-            peach: '🍑'
+            lemon: '🍋', 
+            kiwi: '🥝'
         };
         
         // 水果颜色
         this.fruitColors = {
-            apple: '#ff6b6b',
-            orange: '#ff9a3c',
-            peach: '#ff6b9d'
+            apple: '#ff0000',
+            lemon: '#ffff00',
+            kiwi: '#8fbc8f'
         };
         
         // 水果高亮颜色
         this.highlightColors = {
-            apple: '#ff4757',
-            orange: '#ff7f50',
-            peach: '#ff69b4'
+            apple: '#cc0000',
+            lemon: '#b8860b',  // 改为深黄色，提高可见度
+            kiwi: '#6b8e6b'
         };
-        
         this.init();
     }
 
@@ -77,9 +76,9 @@ class FruitCountingGame {
     // 绑定事件监听器
     bindEvents() {
         // 水果选择按钮
-        this.appleBtn.addEventListener('click', () => this.setSelectionType('apple'));
-        this.orangeBtn.addEventListener('click', () => this.setSelectionType('orange'));
-        this.peachBtn.addEventListener('click', () => this.setSelectionType('peach'));
+         this.appleBtn.addEventListener('click', () => this.setSelectionType('apple'));
+         this.lemonBtn.addEventListener('click', () => this.setSelectionType('lemon'));
+         this.kiwiBtn.addEventListener('click', () => this.setSelectionType('kiwi'));
         
         // 控制按钮
         this.arrangeBtn.addEventListener('click', () => this.arrangeFruits());
@@ -90,9 +89,9 @@ class FruitCountingGame {
         this.canvas.addEventListener('click', (event) => this.handleCanvasClick(event));
         
         // 答案输入框
-        this.appleAnswer.addEventListener('click', () => this.showNumberPad('apple'));
-        this.orangeAnswer.addEventListener('click', () => this.showNumberPad('orange'));
-        this.peachAnswer.addEventListener('click', () => this.showNumberPad('peach'));
+         this.appleAnswer.addEventListener('click', () => this.showNumberPad('apple'));
+         this.lemonAnswer.addEventListener('click', () => this.showNumberPad('lemon'));
+         this.kiwiAnswer.addEventListener('click', () => this.showNumberPad('kiwi'));
         
         // 数字键盘
         document.querySelectorAll('.num-btn').forEach(btn => {
@@ -124,26 +123,38 @@ class FruitCountingGame {
     startGame() {
         this.fruits = [];
         
-        // 每种水果都是5~10个
-        const appleCount = Math.floor(Math.random() * 6) + 5; // 5-10个
-        const orangeCount = Math.floor(Math.random() * 6) + 5; // 5-10个
-        const peachCount = Math.floor(Math.random() * 6) + 5; // 5-10个
+        // 生成各不相同的水果数量（3-9个，符合10以内数的认识）
+        const appleCount = this.generateUniqueFruitCount(3, 9); // 苹果：3-9个
+        const lemonCount = this.generateUniqueFruitCount(3, 9, appleCount); // 柠檬：3-9个，与苹果不同
+        const kiwiCount = this.generateUniqueFruitCount(3, 9, [appleCount, lemonCount]); // 猕猴桃：3-9个，与前两者不同
         
         // 记录水果数量
-        this.fruitCounts = { apple: appleCount, orange: orangeCount, peach: peachCount };
+         this.fruitCounts = { apple: appleCount, lemon: lemonCount, kiwi: kiwiCount };
         
         // 生成水果
-        for (let i = 0; i < appleCount; i++) {
-            this.fruits.push(this.createFruit('apple'));
-        }
-        for (let i = 0; i < orangeCount; i++) {
-            this.fruits.push(this.createFruit('orange'));
-        }
-        for (let i = 0; i < peachCount; i++) {
-            this.fruits.push(this.createFruit('peach'));
-        }
+         for (let i = 0; i < appleCount; i++) {
+             this.fruits.push(this.createFruit('apple'));
+         }
+         for (let i = 0; i < lemonCount; i++) {
+             this.fruits.push(this.createFruit('lemon'));
+         }
+         for (let i = 0; i < kiwiCount; i++) {
+             this.fruits.push(this.createFruit('kiwi'));
+         }
         
         this.render();
+    }
+
+    // 生成唯一的水果数量
+    generateUniqueFruitCount(min, max, exclude) {
+        let count;
+        const excludeArray = Array.isArray(exclude) ? exclude : [exclude];
+        
+        do {
+            count = Math.floor(Math.random() * (max - min + 1)) + min;
+        } while (excludeArray.includes(count));
+        
+        return count;
     }
 
     // 创建水果
@@ -153,30 +164,30 @@ class FruitCountingGame {
             type: type,
             x: position.x,
             y: position.y,
-            radius: 25,
+            radius: 30,  // 减小半径到30px
             selected: false,
             highlight: false
         };
-    }
+ }
 
     // 获取随机位置，确保不重叠
     getRandomPosition() {
-        const padding = 30;
-        const maxX = this.canvas.width - 50;
-        const maxY = this.canvas.height - 50;
+        const padding = 35;  // 减少边距
+        const maxX = this.canvas.width - padding * 2;
+        const maxY = this.canvas.height - padding * 2;
         
         let x, y;
         let attempts = 0;
-        const maxAttempts = 100;
+        const maxAttempts = 150;  // 适当减少尝试次数
         
         do {
-            x = Math.random() * (maxX - padding * 2) + padding;
-            y = Math.random() * (maxY - padding * 2) + padding;
+            x = Math.random() * maxX + padding;
+            y = Math.random() * maxY + padding;
             attempts++;
-        } while (this.isOverlapping(x, y, 25) && attempts < maxAttempts);
+        } while (this.isOverlapping(x, y, 30) && attempts < maxAttempts);
         
         return { x, y };
-    }
+ }
 
     // 检查是否重叠
     isOverlapping(x, y, radius) {
@@ -185,12 +196,12 @@ class FruitCountingGame {
             const dy = fruit.y - y;
             const distance = Math.sqrt(dx * dx + dy * dy);
             
-            if (distance < radius * 2 + 10) { // 10px间距
+            if (distance < radius * 2 + 20) { // 20px间距，适当减少安全距离
                 return true;
             }
         }
         return false;
-    }
+ }
 
     // 处理画布点击
     handleCanvasClick(event) {
@@ -223,9 +234,9 @@ class FruitCountingGame {
         this.currentSelection = type;
         
         // 更新按钮状态
-        this.appleBtn.classList.remove('active');
-        this.orangeBtn.classList.remove('active');
-        this.peachBtn.classList.remove('active');
+         this.appleBtn.classList.remove('active');
+         this.lemonBtn.classList.remove('active');
+         this.kiwiBtn.classList.remove('active');
         
         this[type + 'Btn'].classList.add('active');
         
@@ -268,24 +279,24 @@ class FruitCountingGame {
     arrangeFruits() {
         console.log('排列水果');
         
-        const padding = 30;
-        const spacing = 60; // 增加间距确保不重叠
+        const padding = 40;  // 减少边距以获得更多空间
+        const spacing = 70; // 减少间距
         const columns = 3;
         const colWidth = (this.canvas.width - padding * 2) / columns;
         
         // 按类型分组
-        const apples = this.fruits.filter(f => f.type === 'apple');
-        const oranges = this.fruits.filter(f => f.type === 'orange');
-        const peaches = this.fruits.filter(f => f.type === 'peach');
-        
-        // 排列苹果（第一列）
-        this.arrangeFruitGroup(apples, padding + colWidth * 0, colWidth, padding);
-        
-        // 排列橘子（第二列）
-        this.arrangeFruitGroup(oranges, padding + colWidth * 1, colWidth, padding);
-        
-        // 排列桃子（第三列）
-        this.arrangeFruitGroup(peaches, padding + colWidth * 2, colWidth, padding);
+         const apples = this.fruits.filter(f => f.type === 'apple');
+         const lemons = this.fruits.filter(f => f.type === 'lemon');
+         const kiwis = this.fruits.filter(f => f.type === 'kiwi');
+         
+         // 排列苹果（第一列）
+         this.arrangeFruitGroup(apples, padding + colWidth * 0, colWidth, padding);
+         
+         // 排列柠檬（第二列）
+         this.arrangeFruitGroup(lemons, padding + colWidth * 1, colWidth, padding);
+         
+         // 排列猕猴桃（第三列）
+         this.arrangeFruitGroup(kiwis, padding + colWidth * 2, colWidth, padding);
         
         this.playArrangeSound();
         this.render();
@@ -293,9 +304,9 @@ class FruitCountingGame {
 
     // 排列水果组
     arrangeFruitGroup(fruits, startX, groupWidth, startY) {
-        const fruitSize = 50; // 水果直径
-        const rowSpacing = 60; // 行间距
-        const colSpacing = 60; // 列间距
+        const fruitSize = 70; // 水果直径，减小到70px
+        const rowSpacing = 75; // 行间距，减小到75px
+        const colSpacing = 75; // 列间距，减小到75px
         const maxCols = 2; // 每行固定排2个水果
         
         fruits.forEach((fruit, index) => {
@@ -305,11 +316,12 @@ class FruitCountingGame {
             fruit.x = startX + col * colSpacing + colSpacing / 2;
             fruit.y = startY + row * rowSpacing + rowSpacing / 2;
             
-            // 确保不超出容器边界
-            fruit.x = Math.max(fruit.x, fruit.radius);
-            fruit.x = Math.min(fruit.x, this.canvas.width - fruit.radius);
-            fruit.y = Math.max(fruit.y, fruit.radius);
-            fruit.y = Math.min(fruit.y, this.canvas.height - fruit.radius);
+            // 确保不超出容器边界，调整安全边距
+            const margin = 45; // 调整安全边距
+            fruit.x = Math.max(fruit.x, margin);
+            fruit.x = Math.min(fruit.x, this.canvas.width - margin);
+            fruit.y = Math.max(fruit.y, margin);
+            fruit.y = Math.min(fruit.y, this.canvas.height - margin);
         });
     }
 
@@ -317,8 +329,8 @@ class FruitCountingGame {
     render() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         
-        // 绘制背景
-        this.ctx.fillStyle = '#fffaf0';
+        // 绘制背景 - 使用更中性的颜色，让水果颜色更突出
+        this.ctx.fillStyle = '#f0f4f8';
         this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
         
         // 绘制水果
@@ -331,8 +343,8 @@ class FruitCountingGame {
     drawFruit(fruit) {
         console.log('绘制水果:', fruit.type, '选中状态:', fruit.selected);
         
-        // 绘制水果背景（奶白色）
-        this.ctx.fillStyle = '#fffaf0';
+        // 绘制水果背景（浅灰色）
+        this.ctx.fillStyle = '#e8eef5';
         this.ctx.beginPath();
         this.ctx.arc(fruit.x, fruit.y, fruit.radius, 0, Math.PI * 2);
         this.ctx.fill();
@@ -340,7 +352,7 @@ class FruitCountingGame {
         // 绘制水果外圈
         this.ctx.beginPath();
         this.ctx.arc(fruit.x, fruit.y, fruit.radius, 0, Math.PI * 2);
-        this.ctx.strokeStyle = fruit.highlight ? this.highlightColors[fruit.type] : '#ddd';
+        this.ctx.strokeStyle = fruit.highlight ? this.highlightColors[fruit.type] : '#a0a0a0';
         this.ctx.lineWidth = 3;
         this.ctx.stroke();
         
@@ -355,14 +367,14 @@ class FruitCountingGame {
             
             // 选中光环效果
             this.ctx.beginPath();
-            this.ctx.arc(fruit.x, fruit.y, fruit.radius + 5, 0, Math.PI * 2);
+            this.ctx.arc(fruit.x, fruit.y, fruit.radius + 3, 0, Math.PI * 2);  // 减小光环大小
             this.ctx.strokeStyle = this.fruitColors[fruit.type] + '80';
             this.ctx.lineWidth = 2;
             this.ctx.stroke();
         }
         
         // 绘制水果图标
-        this.ctx.font = '30px Arial';
+        this.ctx.font = '40px Arial';  // 减小字体大小到40px
         this.ctx.textAlign = 'center';
         this.ctx.textBaseline = 'middle';
         this.ctx.fillStyle = '#333';
@@ -386,6 +398,7 @@ class FruitCountingGame {
 
     // 添加数字
     addNumber(number) {
+        this.playClickSound();
         if (this.currentNumber === '0') {
             this.currentNumber = number;
         } else if (this.currentNumber.length < 2) {
@@ -396,6 +409,7 @@ class FruitCountingGame {
 
     // 删除数字
     deleteNumber() {
+        this.playClickSound();
         if (this.currentNumber.length > 1) {
             this.currentNumber = this.currentNumber.slice(0, -1);
         } else {
@@ -406,6 +420,7 @@ class FruitCountingGame {
 
     // 确认数字
     confirmNumber() {
+        this.playClickSound();
         if (this.currentInput) {
             this[this.currentInput + 'Answer'].value = this.currentNumber === '0' ? '' : this.currentNumber;
             this.currentInput = null;
@@ -417,18 +432,18 @@ class FruitCountingGame {
     // 提交答案
     submitAnswers() {
         const answers = {
-            apple: parseInt(this.appleAnswer.value) || 0,
-            orange: parseInt(this.orangeAnswer.value) || 0,
-            peach: parseInt(this.peachAnswer.value) || 0
-        };
+             apple: parseInt(this.appleAnswer.value) || 0,
+             lemon: parseInt(this.lemonAnswer.value) || 0,
+             kiwi: parseInt(this.kiwiAnswer.value) || 0
+         };
+         
+         const correct = {
+             apple: answers.apple === this.fruitCounts.apple,
+             lemon: answers.lemon === this.fruitCounts.lemon,
+             kiwi: answers.kiwi === this.fruitCounts.kiwi
+         };
         
-        const correct = {
-            apple: answers.apple === this.fruitCounts.apple,
-            orange: answers.orange === this.fruitCounts.orange,
-            peach: answers.peach === this.fruitCounts.peach
-        };
-        
-        const allCorrect = correct.apple && correct.orange && correct.peach;
+        const allCorrect = correct.apple && correct.lemon && correct.kiwi;
         
         if (allCorrect) {
             // 全部正确
@@ -460,9 +475,9 @@ class FruitCountingGame {
         this.playFailSound(); // 播放失败音效
         
         // 标记错误答案
-        if (!correct.apple) this.appleAnswer.classList.add('error');
-        if (!correct.orange) this.orangeAnswer.classList.add('error');
-        if (!correct.peach) this.peachAnswer.classList.add('error');
+         if (!correct.apple) this.appleAnswer.classList.add('error');
+         if (!correct.lemon) this.lemonAnswer.classList.add('error');
+         if (!correct.kiwi) this.kiwiAnswer.classList.add('error');
         
         // 1秒后自动关闭错误提示
         setTimeout(() => {
@@ -475,22 +490,22 @@ class FruitCountingGame {
         console.log('重新开始游戏');
         
         // 重置状态
-        this.currentSelection = null;
-        this.selectedCount = 0;
-        this.selectedFruits = { apple: 0, orange: 0, peach: 0 };
+         this.currentSelection = null;
+         this.selectedCount = 0;
+         this.selectedFruits = { apple: 0, lemon: 0, kiwi: 0 };
         
         // 清除答案
-        this.appleAnswer.value = '';
-        this.orangeAnswer.value = '';
-        this.peachAnswer.value = '';
-        this.appleAnswer.classList.remove('error');
-        this.orangeAnswer.classList.remove('error');
-        this.peachAnswer.classList.remove('error');
-        
-        // 重置按钮状态
-        this.appleBtn.classList.remove('active');
-        this.orangeBtn.classList.remove('active');
-        this.peachBtn.classList.remove('active');
+         this.appleAnswer.value = '';
+         this.lemonAnswer.value = '';
+         this.kiwiAnswer.value = '';
+         this.appleAnswer.classList.remove('error');
+         this.lemonAnswer.classList.remove('error');
+         this.kiwiAnswer.classList.remove('error');
+         
+         // 重置按钮状态
+         this.appleBtn.classList.remove('active');
+         this.lemonBtn.classList.remove('active');
+         this.kiwiBtn.classList.remove('active');
         
         // 隐藏模态框
         this.resultModal.classList.add('hidden');
